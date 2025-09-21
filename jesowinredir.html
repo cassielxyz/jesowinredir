@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jesowin_</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* * =============================================
+         * Tweakable CSS Variables
+         * =============================================
+         */
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.14);
+            --neon-glow: rgba(255, 255, 255, 0.95);
+            --neon-shadow: rgba(255, 255, 255, 0.05);
+            --backdrop-blur: 14px;
+            --border-radius: 1.25rem;
+            --font-primary: 'Inter', sans-serif;
+            --font-mono: 'Source Code Pro', monospace;
+
+            /* Animation Timings */
+            --transition-duration: 250ms;
+            --page-load-duration: 1200ms;
+            --type-speed-ms: 120;
+            --erase-speed-ms: 60;
+            --type-pause-ms: 2000;
+            --caret-blink-speed: 700ms;
+        }
+
+        /* * =============================================
+         * Base & Reset Styles
+         * =============================================
+         */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            overflow-x: hidden;
+            /* For page load animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity var(--page-load-duration) cubic-bezier(0.2, 0.8, 0.2, 1),
+                        transform var(--page-load-duration) cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        body.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* * =============================================
+         * Main Structure
+         * =============================================
+         */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+            width: 100%;
+            max-width: 680px;
+        }
+
+        header, main, footer {
+            width: 100%;
+        }
+        
+        /* * =============================================
+         * Header & Typewriter Effect
+         * =============================================
+         */
+        .header-title {
+            font-family: var(--font-mono);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--text-color);
+            display: inline-block;
+            height: clamp(2.5rem, 8vw, 4rem); /* Set fixed height to prevent layout shift */
+        }
+
+        .header-title .caret {
+            display: inline-block;
+            width: 3px;
+            height: 1em; /* Relative to font size */
+            background-color: var(--neon-glow);
+            vertical-align: bottom;
+            opacity: 0;
+            box-shadow: 0 0 8px var(--neon-glow);
+        }
+        
+        .header-title .caret.blink {
+            animation: blink var(--caret-blink-speed) infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* * =============================================
+         * Link Buttons & Glassmorphism
+         * =============================================
+         */
+        .link-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 28px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1rem;
+            
+            background-color: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px var(--neon-shadow);
+
+            /* Frosted glass effect */
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            
+            /* Prepare for animations */
+            will-change: transform, box-shadow;
+            transition: transform var(--transition-duration) ease, 
+                        box-shadow var(--transition-duration) ease;
+        }
+        
+        .btn:hover,
+        .btn:focus-visible {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--neon-shadow), 
+                        inset 0 0 0 1px var(--glass-border), /* Inner glow illusion */
+                        0 0 15px var(--neon-glow); /* Outer neon rim */
+            outline: none;
+        }
+
+        .btn:focus-visible {
+             box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--neon-glow);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            will-change: filter;
+            transition: filter var(--transition-duration) ease;
+        }
+
+        .btn:hover svg,
+        .btn:focus-visible svg {
+            filter: drop-shadow(0 0 8px var(--neon-glow));
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px var(--neon-glow));
+            }
+            50% {
+                transform: scale(1.2);
+                filter: drop-shadow(0 0 16px var(--neon-glow));
+            }
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px var(--neon-glow));
+            }
+        }
+        
+        .btn svg.pulse {
+            animation: pulse 300ms ease-out;
+        }
+
+        /* * =============================================
+         * Footer
+         * =============================================
+         */
+        footer {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color var(--transition-duration), border-color var(--transition-duration);
+        }
+
+        footer a:hover,
+        footer a:focus-visible {
+            color: var(--text-color);
+            border-bottom-color: var(--neon-glow);
+            outline: none;
+        }
+
+        /* * =============================================
+         * Responsiveness
+         * =============================================
+         */
+        @media (max-width: 768px) {
+            .container {
+                gap: 2.5rem;
+            }
+
+            .link-nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.25rem;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 420px;
+                justify-content: center;
+                padding: 18px 24px; /* Taller touch targets */
+            }
+        }
+        
+        /* * =============================================
+         * Accessibility - Reduced Motion
+         * =============================================
+         */
+        @media (prefers-reduced-motion: reduce) {
+            body, .btn {
+                transition: none;
+            }
+            
+            body.loaded {
+                transform: none;
+            }
+
+            .btn:hover,
+            .btn:focus-visible {
+                transform: none;
+            }
+
+            .header-title .caret.blink,
+            .btn svg.pulse {
+                animation: none;
+            }
+            
+            .header-title .caret.blink {
+                opacity: 1; /* Keep caret visible */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header: Text will be populated by the typewriter script -->
+        <header>
+            <h1 class="header-title" aria-label="jesowin_"><span id="typewriter-text"></span><span class="caret" id="caret"></span></h1>
+        </header>
+
+        <!-- Main Content: Navigation links -->
+        <main>
+            <nav class="link-nav" aria-label="Social and professional links">
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/jesowin_/" target="blank" rel="noopener noreferrer" class="btn" aria-label="Open jesowin Instagram (opens in new tab)">
+                    <!-- SVG Icon for Instagram -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.765.297 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.297-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.935 20.644.523 19.86.22c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.056 1.17-.249 1.805-.415 2.227a2.47 2.47 0 0 1-.896 1.382c-.42.419-.82.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.585-.015-4.85-.074c-1.17-.056-1.805-.249-2.227-.415a2.47 2.47 0 0 1-1.382-.896c-.42-.419-.679-.82-1.381-.896-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.015-3.585.074-4.85c.056-1.17.249-1.805.415-2.227.217-.562.477-.96.896-1.382.419-.42.819-.679 1.381-.896.422-.164 1.057-.36 2.227-.413C8.415 2.172 8.796 2.16 12 2.16zm0 9.004a3.832 3.832 0 1 0 0 7.664 3.832 3.832 0 0 0 0-7.664zm0 6.203a2.37 2.37 0 1 1 0-4.74 2.37 2.37 0 0 1 0 4.74zm6.38-7.602a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92z"/></svg>
+                    <span>Instagram</span>
+                </a>
+
+                <!-- GitHub -->
+                <a href="https://github.com/jesowinxyz" target="blank" rel="noopener noreferrer" class="btn" aria-label="Open jesowin GitHub (opens in new tab)">
+                    <!-- SVG Icon for GitHub -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    <span>GitHub</span>
+                </a>
+                
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/jesowinraja6/" target="blank" rel="noopener noreferrer" class="btn" aria-label="Open jesowin LinkedIn (opens in new tab)">
+                    <!-- SVG Icon for LinkedIn -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 0 1 2.063-2.065 2.064 2.064 0 0 1 2.063 2.065c0 1.14-.925 2.065-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
+                    <span>LinkedIn</span>
+                </a>
+
+                <!-- Portfolio -->
+                <a href="https://jesowin.vercel.app/" target="blank" rel="noopener noreferrer" class="btn" aria-label="Open jesowin Portfolio (opens in new tab)">
+                    <!-- SVG Icon for Portfolio -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <span>Portfolio</span>
+                </a>
+            </nav>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>Contact me: <a href="mailto:jesowinraja50@gmail.com">jesowinraja50@gmail.com</a></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Page Load Animation ---
+            document.body.classList.add('loaded');
+            
+            // --- Typewriter Effect ---
+            const textElement = document.getElementById('typewriter-text');
+            const caretElement = document.getElementById('caret');
+            const textToType = 'jesowin_';
+            
+            // Get timings from CSS variables for easy tweaking
+            const typeSpeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--type-speed-ms'), 10);
+            const eraseSpeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--erase-speed-ms'), 10);
+            const pauseDuration = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--type-pause-ms'), 10);
+
+            let charIndex = 0;
+
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function type() {
+                caretElement.classList.remove('blink');
+                if (charIndex < textToType.length) {
+                    textElement.textContent += textToType.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typeSpeed);
+                } else {
+                    caretElement.classList.add('blink');
+                    setTimeout(erase, pauseDuration);
+                }
+            }
+
+            function erase() {
+                caretElement.classList.remove('blink');
+                if (charIndex > 0) {
+                    textElement.textContent = textToType.substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(erase, eraseSpeed);
+                } else {
+                    caretElement.classList.add('blink');
+                    setTimeout(type, typeSpeed * 2);
+                }
+            }
+            
+            if (prefersReducedMotion) {
+                // If user prefers reduced motion, show text immediately and do not loop
+                textElement.textContent = textToType;
+                caretElement.classList.add('blink');
+            } else {
+                // Start the looping typewriter animation
+                setTimeout(type, 500);
+            }
+
+            // --- Button Click Pulse Effect ---
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (prefersReducedMotion) return;
+
+                    const icon = this.querySelector('svg');
+                    if (icon) {
+                        // Add pulse class. Navigation will happen naturally from the <a> tag.
+                        // The browser will attempt to render the animation's start.
+                        icon.classList.add('pulse');
+                        icon.addEventListener('animationend', () => {
+                            icon.classList.remove('pulse');
+                        }, { once: true });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
